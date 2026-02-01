@@ -1,301 +1,212 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Break the Spell</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Break the Spell</title>
 
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;500;600&family=Plus+Jakarta+Sans:wght@300;500;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
-    <!-- GSAP -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    <style>
-        :root {
-            --text-white: #ffffff;
-            --accent-purple: #a855f7;
-        }
+html, body {
+    width: 100%;
+    height: 100%;
+    background: black;
+    color: white;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    overflow: hidden;
+}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-font-smoothing: antialiased;
-        }
+/* BACKGROUND */
+.background {
+    position: fixed;
+    inset: 0;
+    background: url("bg.jpg") center/cover no-repeat;
+}
 
-        html, body {
-            width: 100%;
-            height: 100%;
-            background: #000;
-            color: var(--text-white);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            overflow: hidden;
-        }
+/* OVERLAY */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(to right, rgba(0,0,0,0.85), rgba(0,0,0,0.2));
+}
 
-        /* BACKGROUND */
-        .background-scene {
-            position: fixed;
-            inset: 0;
-            background-image: url('bg.jpg');
-            background-size: cover;
-            background-position: center;
-            z-index: 1;
-            transform: scale(1.1);
-        }
+/* ONBOARDING */
+#onboarding {
+    position: fixed;
+    inset: 0;
+    background: #050505;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
 
-        .background-scene::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(
-                to right,
-                rgba(0,0,0,0.85) 0%,
-                rgba(0,0,0,0.5) 40%,
-                rgba(0,0,0,0) 100%
-            );
-        }
+#onboarding input {
+    font-size: 3rem;
+    background: none;
+    border: none;
+    border-bottom: 2px solid #555;
+    color: white;
+    text-align: center;
+    outline: none;
+}
 
-        /* ONBOARDING */
-        #onboarding {
-            position: fixed;
-            inset: 0;
-            background: #050505;
-            z-index: 100;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
+/* MAIN */
+#main {
+    position: relative;
+    z-index: 5;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 10%;
+    opacity: 0;
+    visibility: hidden;
+}
 
-        .onboarding-content {
-            max-width: 600px;
-            padding: 20px;
-        }
+h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem;
+    margin-bottom: 20px;
+}
 
-        .onboarding-content h2 {
-            letter-spacing: 4px;
-            font-size: 0.7rem;
-            opacity: 0.5;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-        }
+p {
+    font-size: 1.3rem;
+    max-width: 600px;
+    margin-bottom: 40px;
+}
 
-        input {
-            width: 100%;
-            background: transparent;
-            border: none;
-            border-bottom: 2px solid rgba(255,255,255,0.15);
-            color: white;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 4rem;
-            text-align: center;
-            outline: none;
-            padding: 10px;
-        }
+.actions {
+    display: flex;
+    gap: 30px;
+}
 
-        input:focus {
-            border-bottom-color: var(--accent-purple);
-        }
+button {
+    padding: 18px 45px;
+    border-radius: 50px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+}
 
-        /* MAIN CONTENT */
-        .content-layer {
-            position: relative;
-            z-index: 10;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            padding: 0 10%;
-            opacity: 0;
-            visibility: hidden;
-        }
+.yes {
+    background: white;
+    color: black;
+}
 
-        .text-container {
-            max-width: 650px;
-        }
+.no {
+    background: rgba(255,255,255,0.1);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+    position: relative; /* IMPORTANT */
+}
 
-        h1 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(3rem, 8vw, 5rem);
-            font-weight: 300;
-            margin-bottom: 30px;
-        }
-
-        .story-p {
-            font-size: clamp(1.1rem, 2vw, 1.4rem);
-            line-height: 1.6;
-            opacity: 0.9;
-            margin-bottom: 50px;
-        }
-
-        .recipient-name {
-            color: var(--accent-purple);
-            font-weight: 600;
-        }
-
-        /* BUTTONS */
-        .actions {
-            display: flex;
-            gap: 25px;
-            align-items: center;
-        }
-
-        button {
-            cursor: pointer;
-            padding: 20px 50px;
-            border-radius: 100px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            transition: 0.3s ease;
-        }
-
-        .btn-yes {
-            background: #fff;
-            color: #000;
-            border: none;
-        }
-
-        .btn-yes:hover {
-            transform: scale(1.05);
-            box-shadow: 0 20px 40px rgba(255,255,255,0.2);
-        }
-
-        .btn-no {
-            background: rgba(255,255,255,0.05);
-            color: #fff;
-            border: 1px solid rgba(255,255,255,0.2);
-            backdrop-filter: blur(10px);
-        }
-
-        /* SUCCESS SCREEN */
-        #success-screen {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.92);
-            z-index: 200;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-    </style>
+/* SUCCESS */
+#success {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.95);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 20;
+}
+</style>
 </head>
+
 <body>
+
+<div class="background"></div>
+<div class="overlay"></div>
 
 <!-- ONBOARDING -->
 <div id="onboarding">
-    <div class="onboarding-content">
-        <h2>Authentication Required</h2>
-        <input id="name-input" placeholder="Type Name" autocomplete="off"
-               onkeydown="if(event.key==='Enter') launch()">
-        <p style="margin-top:30px;font-size:0.7rem;opacity:0.3;letter-spacing:1px;">
-            PRESS ENTER TO INITIALIZE
-        </p>
-    </div>
+    <input id="nameInput" placeholder="Type name"
+        onkeydown="if(event.key==='Enter') start()">
 </div>
 
-<!-- BACKGROUND -->
-<div class="background-scene" id="bg-img"></div>
-
-<!-- MAIN UI -->
-<div class="content-layer" id="main-ui">
-    <div class="text-container">
+<!-- MAIN -->
+<div id="main">
+    <div>
         <h1>The Curse.</h1>
-        <p class="story-p">
-            Deviji hamne saari valentines akele (apne haath ke saath) kaati hai,
-            iss 20 saal ki shraap ko todne mai apna yogdaan dijiye.
-            <br><br>
-            <span class="recipient-name" id="user-name"></span>,
+        <p>
+            <span id="name"></span>,
             will you be my valentine?
         </p>
+
         <div class="actions">
-            <button class="btn-yes" onclick="celebrate()">Break the spell</button>
-            <button class="btn-no" id="evasive-no">Decline</button>
+            <button class="yes" onclick="celebrate()">Break the spell</button>
+            <button class="no" id="decline">Decline</button>
         </div>
     </div>
 </div>
 
 <!-- SUCCESS -->
-<div id="success-screen">
+<div id="success">
     <div>
-        <h1 style="font-family:'Cormorant Garamond',serif;font-size:4.5rem;">
-            Keep your ass ready.
-        </h1>
-        <p style="margin-top:20px;letter-spacing:4px;opacity:0.6;text-transform:uppercase;">
-            14th February. No escape.
-        </p>
+        <h1>Keep your ass ready.</h1>
+        <p>14th February. No escape.</p>
     </div>
 </div>
 
 <script>
-    let evasiveActive = false;
+let active = false;
+const noBtn = document.getElementById("decline");
 
-    function launch() {
-        const name = document.getElementById('name-input').value.trim();
-        if (!name) return;
+function start() {
+    const name = document.getElementById("nameInput").value.trim();
+    if (!name) return;
 
-        document.getElementById('user-name').innerText = name;
+    document.getElementById("name").innerText = name;
+    document.getElementById("onboarding").style.display = "none";
 
-        const tl = gsap.timeline();
+    const main = document.getElementById("main");
+    main.style.visibility = "visible";
+    gsap.to(main, { opacity: 1, duration: 1.5 });
 
-        tl.to("#onboarding", {
-            opacity: 0,
-            duration: 1,
-            ease: "power3.inOut",
-            onComplete: () => {
-                document.getElementById('onboarding').style.display = 'none';
-                document.getElementById('main-ui').style.visibility = 'visible';
-            }
+    setTimeout(() => active = true, 1000);
+}
+
+/* STABLE EVADE LOGIC */
+let lastMove = 0;
+
+document.addEventListener("mousemove", (e) => {
+    if (!active) return;
+
+    const now = Date.now();
+    if (now - lastMove < 120) return;
+    lastMove = now;
+
+    const rect = noBtn.getBoundingClientRect();
+    const bx = rect.left + rect.width / 2;
+    const by = rect.top + rect.height / 2;
+
+    const dx = e.clientX - bx;
+    const dy = e.clientY - by;
+
+    const dist = Math.hypot(dx, dy);
+
+    if (dist < 180) {
+        gsap.to(noBtn, {
+            x: gsap.utils.clamp(-120, 120, -dx * 0.4),
+            y: gsap.utils.clamp(-80, 80, -dy * 0.4),
+            duration: 0.25,
+            ease: "power2.out"
         });
-
-        tl.to("#bg-img", {
-            scale: 1,
-            duration: 4,
-            ease: "power2.out"
-        }, "-=0.5");
-
-        tl.to("#main-ui", {
-            opacity: 1,
-            duration: 2,
-            ease: "power2.out"
-        }, "-=3");
-
-        setTimeout(() => {
-            evasiveActive = true;
-        }, 1500);
     }
+});
 
-    const noBtn = document.getElementById('evasive-no');
-
-    document.addEventListener('mousemove', (e) => {
-        if (!evasiveActive) return;
-
-        const rect = noBtn.getBoundingClientRect();
-        const bx = rect.left + rect.width / 2;
-        const by = rect.top + rect.height / 2;
-
-        const distance = Math.hypot(e.clientX - bx, e.clientY - by);
-
-        if (distance < 250) {
-            gsap.killTweensOf(noBtn);
-
-            gsap.to(noBtn, {
-                x: `+=${(bx - e.clientX) * 1.1}`,
-                y: `+=${(by - e.clientY) * 1.1}`,
-                rotation: gsap.utils.random(-5, 5),
-                duration: 0.15,
-                ease: "power2.out"
-            });
-        }
-    });
-
-    function celebrate() {
-        const screen = document.getElementById('success-screen');
-        screen.style.display = 'flex';
-        gsap.fromTo(screen, {opacity:0}, {opacity:1, duration:1});
-    }
+function celebrate() {
+    document.getElementById("success").style.display = "flex";
+}
 </script>
 
 </body>
