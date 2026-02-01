@@ -17,28 +17,29 @@
 html, body {
     width: 100%;
     height: 100%;
-    background: black;
+    background: black; /* Fallback if image doesn't load */
     color: white;
     font-family: 'Plus Jakarta Sans', sans-serif;
     overflow: hidden;
 }
 
-/* BACKGROUND - Keep bg.jpg logic */
+/* BACKGROUND - Fixed visibility */
 .background {
     position: fixed;
     inset: 0;
-    background: url("bg.jpg") center/cover no-repeat;
-    z-index: -2;
+    background: url("bg.jpg") center center / cover no-repeat;
+    z-index: 1; /* Lowest visible layer */
 }
 
+/* DARK OVERLAY - Ensures text is readable over the image */
 .overlay {
     position: fixed;
     inset: 0;
-    background: linear-gradient(to right, rgba(0,0,0,0.85), rgba(0,0,0,0.4));
-    z-index: -1;
+    background: linear-gradient(to right, rgba(0,0,0,0.85), rgba(0,0,0,0.3));
+    z-index: 2;
 }
 
-/* ONBOARDING - Added smooth transition support */
+/* ONBOARDING */
 #onboarding {
     position: fixed;
     inset: 0;
@@ -69,10 +70,10 @@ html, body {
     font-family: 'Cormorant Garamond', serif;
 }
 
-/* MAIN CONTENT - Added fade-in state */
+/* MAIN CONTENT */
 #main {
     position: relative;
-    z-index: 5;
+    z-index: 10;
     height: 100%;
     display: flex;
     align-items: center;
@@ -115,28 +116,31 @@ button {
     color: black;
 }
 
-/* DECLINE BUTTON - Playful movement styles */
+/* DECLINE BUTTON - Evasive & Continuous */
 .no {
-    position: fixed; /* Fixed to allow free movement on screen */
+    position: fixed; 
     background: rgba(255,255,255,0.1);
     color: white;
     border: 1px solid rgba(255,255,255,0.3);
-    /* Transition makes the movement 'slow and continuous' rather than teleporting */
     transition: left 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
                 top 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    z-index: 10;
+    z-index: 15;
 }
 
-/* SUCCESS */
+/* SUCCESS - Transition fixed */
 #success {
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,0.95);
-    display: none;
+    display: flex; /* Always flex but invisible */
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
     z-index: 200;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1.5s ease, visibility 1.5s ease;
 }
 </style>
 </head>
@@ -164,7 +168,7 @@ button {
         </p>
 
         <div class="actions">
-            <button class="yes" onclick="celebrate()">Break the spell</button>
+            <button class="yes" onclick="celebrate()">Isi din ka intezaar tha</button>
             <button class="no" id="decline">Decline</button>
         </div>
     </div>
@@ -172,14 +176,12 @@ button {
 
 <!-- SUCCESS -->
 <div id="success">
-    <div>
-        <h1 style="font-family:'Cormorant Garamond',serif;font-size:4.5rem;">
-            Keep your ass ready.
-        </h1>
-        <p style="margin-top:20px;letter-spacing:4px;opacity:0.6;text-transform:uppercase;">
-            14th February. No escape.
-        </p>
-    </div>
+    <h1 style="font-family:'Cormorant Garamond',serif;font-size:4.5rem;">
+        Keep your ass ready.
+    </h1>
+    <p style="margin-top:20px;letter-spacing:4px;opacity:0.6;text-transform:uppercase;">
+        14th February. No escape.
+    </p>
 </div>
 
 <script>
@@ -187,6 +189,7 @@ let active = false;
 const btn = document.getElementById("decline");
 const onboarding = document.getElementById("onboarding");
 const main = document.getElementById("main");
+const successScreen = document.getElementById("success");
 
 function start() {
     const name = document.getElementById("nameInput").value.trim();
@@ -194,17 +197,16 @@ function start() {
 
     document.getElementById("userName").innerText = name;
     
-    // 1. Fade out onboarding
+    // Smooth transition from onboarding to main
     onboarding.style.opacity = "0";
     onboarding.style.visibility = "hidden";
 
-    // 2. Fade in main content smoothly
     setTimeout(() => {
         onboarding.style.display = "none";
         main.style.visibility = "visible";
         main.style.opacity = "1";
         
-        // Initial button placement
+        // Place decline button next to yes button initially
         const yesBtn = document.querySelector('.yes').getBoundingClientRect();
         btn.style.left = (yesBtn.right + 40) + "px";
         btn.style.top = yesBtn.top + "px";
@@ -213,7 +215,7 @@ function start() {
     }, 1000);
 }
 
-/* CONTINUOUS EVASIVE LOGIC */
+/* DECLINE BUTTON LOGIC */
 document.addEventListener("mousemove", (e) => {
     if (!active) return;
 
@@ -221,39 +223,40 @@ document.addEventListener("mousemove", (e) => {
     const mouseY = e.clientY;
     
     const btnRect = btn.getBoundingClientRect();
-    const btnX = btnRect.left + btnRect.width / 2;
-    const btnY = btnRect.top + btnRect.height / 2;
+    const btnCenterX = btnRect.left + btnRect.width / 2;
+    const btnCenterY = btnRect.top + btnRect.height / 2;
 
-    const dx = btnX - mouseX;
-    const dy = btnY - mouseY;
+    const dx = btnCenterX - mouseX;
+    const dy = btnCenterY - mouseY;
     const distance = Math.hypot(dx, dy);
 
-    // If mouse gets close (within 180px)
+    // If mouse gets close (180px), glide away
     if (distance < 180) {
         const angle = Math.atan2(dy, dx);
-        // Move 100px away from the current position
-        const moveDist = 120; 
+        const moveDist = 130; 
         
-        let newX = btnRect.left + Math.cos(angle) * moveDist;
-        let newY = btnRect.top + Math.sin(angle) * moveDist;
+        let newLeft = btnRect.left + Math.cos(angle) * moveDist;
+        let newTop = btnRect.top + Math.sin(angle) * moveDist;
 
-        // BOUNDARY CHECK: Ensure button stays within screen margins (50px)
-        const margin = 50;
-        const screenW = window.innerWidth;
-        const screenH = window.innerHeight;
+        // Keep inside screen boundaries
+        const margin = 40;
+        const sW = window.innerWidth;
+        const sH = window.innerHeight;
 
-        if (newX < margin) newX = margin;
-        if (newX > screenW - btnRect.width - margin) newX = screenW - btnRect.width - margin;
-        if (newY < margin) newY = margin;
-        if (newY > screenH - btnRect.height - margin) newY = screenH - btnRect.height - margin;
+        if (newLeft < margin) newLeft = margin;
+        if (newLeft > sW - btnRect.width - margin) newLeft = sW - btnRect.width - margin;
+        if (newTop < margin) newTop = margin;
+        if (newTop > sH - btnRect.height - margin) newTop = sH - btnRect.height - margin;
 
-        btn.style.left = newX + "px";
-        btn.style.top = newY + "px";
+        btn.style.left = newLeft + "px";
+        btn.style.top = newTop + "px";
     }
 });
 
 function celebrate() {
-    document.getElementById("success").style.display = "flex";
+    // Smooth fade to success screen
+    successScreen.style.visibility = "visible";
+    successScreen.style.opacity = "1";
 }
 </script>
 
