@@ -3,220 +3,241 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Cure | Valentine</title>
+    <title>The Spell | Valentine's 2024</title>
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;800&display=swap" rel="stylesheet">
+    <!-- Typography: Cormorant Garamond for Serif, Plus Jakarta for Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;500;600&family=Plus+Jakarta+Sans:wght@300;500;800&display=swap" rel="stylesheet">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
     <style>
         :root {
-            /* Light Purple Aesthetic */
-            --bg-color: #f0e6ff; 
-            --glass-bg: rgba(255, 255, 255, 0.4);
-            --glass-border: rgba(255, 255, 255, 0.6);
-            --text-dark: #2d1b4d;
-            --accent-red: #ff3366;
+            --deep-violet: #0d001a;
+            --lavender: #4b0082;
+            --accent-red: #ff2d55;
+            --text-white: rgba(255, 255, 255, 0.95);
         }
 
         * {
             margin: 0; padding: 0; box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
 
         body, html {
             width: 100%; height: 100%;
-            background-color: var(--bg-color);
-            color: var(--text-dark);
+            /* Soft, Elegant Purple Gradient */
+            background: radial-gradient(circle at center, var(--lavender) 0%, var(--deep-violet) 100%);
+            color: var(--text-white);
             overflow: hidden;
         }
 
-        /* Grain Texture (Slush Signature) */
-        .grain {
+        /* 1. STRUCTURAL REFERENCE: TOP NAVIGATION */
+        nav {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-image: url("https://grainy-gradients.vercel.app/noise.svg");
-            opacity: 0.15;
-            pointer-events: none;
-            z-index: 10;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.7;
         }
 
-        /* Floating Sprinkles Background */
-        .sprinkle {
+        /* 2. BACKGROUND DECORATIVE ELEMENTS (Doves & Wine) */
+        .decorative-element {
             position: absolute;
-            font-size: 24px;
-            pointer-events: none;
             z-index: 5;
-            filter: grayscale(0.2) opacity(0.6);
+            pointer-events: none;
+            /* Thin subtle white outline requested */
+            filter: drop-shadow(0 0 1px rgba(255,255,255,0.8));
+            user-select: none;
+            font-size: 4rem; /* Scaled larger for immersive feel */
         }
 
         #canvas-container {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            z-index: 2;
+            z-index: 10; /* Heart is visually dominant & centered */
         }
 
-        .ui-layer {
+        /* 3. MAIN LAYOUT: CLEAN TEXT ON LEFT */
+        .content-layer {
             position: relative;
             z-index: 20;
             width: 100%; height: 100%;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 40px;
+            align-items: flex-end; /* Text positioned at bottom-left */
+            padding: 80px;
         }
 
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 32px;
-            padding: 40px;
-            width: 100%;
-            max-width: 500px;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+        .text-container {
+            max-width: 550px;
+            /* No glassmorphism/boxes - direct on background */
         }
 
         h1 {
-            font-weight: 800;
-            font-size: 2.2rem;
-            letter-spacing: -1px;
-            margin-bottom: 20px;
-            line-height: 1.2;
-        }
-
-        .story-text {
-            font-size: 1.1rem;
-            line-height: 1.6;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.5rem;
+            font-weight: 300;
+            line-height: 1.1;
             margin-bottom: 30px;
-            font-weight: 500;
-            opacity: 0.9;
         }
 
-        input {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.8);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 18px;
-            color: var(--text-dark);
+        .story-p {
+            font-family: 'Plus Jakarta Sans', sans-serif;
             font-size: 1rem;
-            outline: none;
-            margin-bottom: 20px;
+            line-height: 1.8;
+            opacity: 0.7;
+            margin-bottom: 40px;
+            font-weight: 300;
         }
 
-        button {
-            cursor: pointer;
-            padding: 16px 32px;
-            border-radius: 14px;
-            border: none;
-            font-weight: 700;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background: var(--text-dark);
-            color: white;
-            width: 100%;
+        /* ACTIONS */
+        .actions {
+            display: flex;
+            gap: 20px;
+            align-items: center;
         }
 
         .btn-yes {
-            background: var(--accent-red);
-            color: white;
-            font-size: 1.2rem;
+            background: white;
+            color: black;
             padding: 18px 45px;
-            box-shadow: 0 10px 20px rgba(255, 51, 102, 0.3);
+            border-radius: 50px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s ease;
         }
 
         .btn-no {
-            background: white;
-            color: var(--text-dark);
-            border: 1px solid var(--glass-border);
+            background: transparent;
+            color: white;
+            padding: 18px 45px;
+            border-radius: 50px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            border: 1px solid rgba(255,255,255,0.2);
+            cursor: pointer;
         }
 
-        #step-2, #step-success {
+        /* Success State Overlay */
+        #success-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--deep-violet);
+            z-index: 200;
             display: none;
-            max-width: 800px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             text-align: center;
         }
 
-        .button-row {
+        /* Identification Modal (Initial State) */
+        #onboarding {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--deep-violet);
+            z-index: 300;
             display: flex;
-            gap: 20px;
             justify-content: center;
-            margin-top: 40px;
+            align-items: center;
         }
-
-        .heart-glow {
-            color: var(--accent-red);
+        
+        input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            text-align: center;
+            outline: none;
+            padding: 10px;
         }
     </style>
 </head>
 <body>
 
-    <div class="grain"></div>
-    <div id="sprinkle-container"></div>
+    <nav>
+        <span>About</span>
+        <span>The Spell</span>
+        <span style="opacity: 1; font-weight: 800;">Feb 14</span>
+    </nav>
+
+    <!-- Background Elements -->
+    <div id="sprinkle-layer"></div>
+
     <div id="canvas-container"></div>
 
-    <div class="ui-layer">
-        <!-- STEP 1 -->
-        <div id="step-1" class="glass-card">
-            <h1>Identity Check</h1>
-            <input type="text" id="recipient-name" placeholder="Who are you?">
-            <button class="btn-primary" onclick="proceedToQuestion()">Verify Identity</button>
-        </div>
+    <!-- Initial Step -->
+    <div id="onboarding">
+        <input type="text" id="name-input" placeholder="Type your name..." onkeydown="if(event.key==='Enter') startExperience()">
+    </div>
 
-        <!-- STEP 2 -->
-        <div id="step-2">
-            <div class="glass-card" style="max-width: 700px;">
-                <p id="question-text" class="story-text"></p>
-                <div class="button-row">
-                    <button class="btn-yes" onclick="showSuccess()">Yes</button>
-                    <button class="btn-no" id="no-button">No</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- STEP 3 -->
-        <div id="step-success">
-            <div class="glass-card">
-                <h1 style="color: var(--accent-red);">Spell Broken. ❤️</h1>
-                <p class="story-text">The curse has been lifted. <br>I'll see you on Valentine's Day.</p>
+    <!-- Main Content -->
+    <div class="content-layer" id="main-content" style="display:none; opacity:0;">
+        <div class="text-container">
+            <h1 id="headline">The Wizard's Curse.</h1>
+            <p class="story-p">
+                I’m convinced I was cursed by a wizard 20 years ago to spend Valentine's Day alone. 
+                The only known cure is a 'Yes' from someone as amazing as you. 
+                <span id="target-name" style="font-weight: 600; color: white;"></span>, will you break the spell?
+            </p>
+            <div class="actions">
+                <button class="btn-yes" onclick="finish()">Accept</button>
+                <button class="btn-no" id="no-btn">Decline</button>
             </div>
         </div>
     </div>
 
+    <div id="success-overlay">
+        <h1 style="font-size: 5rem;">Connection Established.</h1>
+        <p class="story-p">The spell is broken. See you soon.</p>
+    </div>
+
     <script>
-        /** BACKGROUND SPRINKLES **/
-        const icons = ['🕊️', '🌹', '💌', '✨', '🩹', '🎀', '🥂', '☁️'];
-        // Adding the cheekier requests
-        const specialIcons = ['🫧', '🦢']; 
+        let scene, camera, renderer, heart;
 
-        function createSprinkles() {
-            const container = document.getElementById('sprinkle-container');
-            const allIcons = [...icons, ...specialIcons];
+        function startExperience() {
+            const name = document.getElementById('name-input').value;
+            if(!name) return;
+            document.getElementById('target-name').innerText = name;
             
-            for (let i = 0; i < 25; i++) {
-                const span = document.createElement('span');
-                span.className = 'sprinkle';
-                span.innerText = allIcons[Math.floor(Math.random() * allIcons.length)];
-                span.style.left = Math.random() * 100 + 'vw';
-                span.style.top = Math.random() * 100 + 'vh';
-                container.appendChild(span);
+            gsap.to("#onboarding", { opacity: 0, duration: 1, onComplete: () => {
+                document.getElementById('onboarding').style.display = 'none';
+                document.getElementById('main-content').style.display = 'flex';
+                gsap.to("#main-content", { opacity: 1, duration: 2 });
+            }});
+        }
 
-                // Floating animation
-                gsap.to(span, {
+        /** DECORATIVE BACKGROUND ELEMENTS **/
+        function createDecorations() {
+            const container = document.getElementById('sprinkle-layer');
+            const items = ['🕊️', '🍷', '🕊️', '🌹', '✨', '🥂'];
+            
+            for (let i = 0; i < 12; i++) {
+                const el = document.createElement('div');
+                el.className = 'decorative-element';
+                el.innerText = items[i % items.length];
+                el.style.left = Math.random() * 90 + 'vw';
+                el.style.top = Math.random() * 90 + 'vh';
+                container.appendChild(el);
+
+                gsap.to(el, {
                     y: "random(-100, 100)",
                     x: "random(-50, 50)",
-                    rotation: "random(-45, 45)",
-                    duration: "random(10, 20)",
+                    duration: "random(15, 25)",
                     repeat: -1,
                     yoyo: true,
                     ease: "sine.inOut"
@@ -224,9 +245,7 @@
             }
         }
 
-        /** 3D HEART (RED) **/
-        let scene, camera, renderer, heart;
-        
+        /** 3D CENTERED HEART **/
         function init3D() {
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -234,39 +253,36 @@
 
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
             document.getElementById('canvas-container').appendChild(renderer.domElement);
 
+            const shape = new THREE.Shape();
             const x = 0, y = 0;
-            const heartShape = new THREE.Shape();
-            heartShape.moveTo( x + 0.5, y + 0.5 );
-            heartShape.bezierCurveTo( x + 0.5, y + 0.5, x + 0.4, y, x, y );
-            heartShape.bezierCurveTo( x - 0.6, y, x - 0.6, y + 0.7,x - 0.6, y + 0.7 );
-            heartShape.bezierCurveTo( x - 0.6, y + 1.1, x - 0.3, y + 1.54, x + 0.5, y + 1.9 );
-            heartShape.bezierCurveTo( x + 1.2, y + 1.54, x + 1.6, y + 1.1, x + 1.6, y + 0.7 );
-            heartShape.bezierCurveTo( x + 1.6, y + 0.7, x + 1.6, y, x + 1.0, y );
-            heartShape.bezierCurveTo( x + 0.7, y, x + 0.5, y + 0.5, x + 0.5, y + 0.5 );
+            shape.moveTo(x + 0.5, y + 0.5);
+            shape.bezierCurveTo(x + 0.5, y + 0.5, x + 0.4, y, x, y);
+            shape.bezierCurveTo(x - 0.6, y, x - 0.6, y + 0.7, x - 0.6, y + 0.7);
+            shape.bezierCurveTo(x - 0.6, y + 1.1, x - 0.3, y + 1.54, x + 0.5, y + 1.9);
+            shape.bezierCurveTo(x + 1.2, y + 1.54, x + 1.6, y + 1.1, x + 1.6, y + 0.7);
+            shape.bezierCurveTo(x + 1.6, y + 0.7, x + 1.6, y, x + 1.0, y);
+            shape.bezierCurveTo(x + 0.7, y, x + 0.5, y + 0.5, x + 0.5, y + 0.5);
 
-            const extrudeSettings = { depth: 0.4, bevelEnabled: true, bevelSegments: 20, steps: 2, bevelSize: 0.2, bevelThickness: 0.2 };
-            const geometry = new THREE.ExtrudeGeometry(heartShape, extrudeSettings);
+            const geometry = new THREE.ExtrudeGeometry(shape, { depth: 0.4, bevelEnabled: true, bevelSize: 0.2, bevelThickness: 0.2 });
             geometry.center();
 
-            // Material: Bright Red Glow
-            const material = new THREE.MeshStandardMaterial({
-                color: 0xff3366,
-                emissive: 0xff0000,
-                emissiveIntensity: 0.4,
-                roughness: 0.2,
-                metalness: 0.3
+            const material = new THREE.MeshPhongMaterial({
+                color: 0xff2d55,
+                shininess: 100,
+                emissive: 0x440000
             });
 
             heart = new THREE.Mesh(geometry, material);
-            heart.rotation.z = Math.PI; 
+            heart.rotation.z = Math.PI;
             scene.add(heart);
 
-            const light = new THREE.PointLight(0xffffff, 1, 100);
-            light.position.set(5, 5, 5);
+            const light = new THREE.DirectionalLight(0xffffff, 1.2);
+            light.position.set(1, 1, 5);
             scene.add(light);
-            scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+            scene.add(new THREE.AmbientLight(0xffffff, 0.3));
 
             animate();
         }
@@ -274,62 +290,36 @@
         function animate() {
             requestAnimationFrame(animate);
             heart.rotation.y += 0.005;
-            heart.position.y = Math.sin(Date.now() * 0.001) * 0.1;
+            heart.position.y = Math.sin(Date.now() * 0.001) * 0.15;
             renderer.render(scene, camera);
         }
 
-        /** FLOW LOGIC **/
-        function proceedToQuestion() {
-            const name = document.getElementById('recipient-name').value;
-            if (!name) return;
-
-            const story = `I’m convinced I was cursed by a wizard 20 years ago to spend Valentine's Day alone. The only known cure is a 'Yes' from someone as amazing as you. <br><br><strong>${name}</strong>, will you break the spell and be my Valentine?`;
-            document.getElementById('question-text').innerHTML = story;
-
-            gsap.to("#step-1", {
-                opacity: 0, scale: 0.9, duration: 0.5, 
-                onComplete: () => {
-                    document.getElementById('step-1').style.display = 'none';
-                    document.getElementById('step-2').style.display = 'block';
-                    gsap.from("#step-2", { opacity: 0, y: 30, duration: 1 });
-                }
-            });
-        }
-
-        /** EVASIVE NO BUTTON **/
-        const noBtn = document.getElementById('no-button');
+        /** EVASIVE BUTTON **/
+        const noBtn = document.getElementById('no-btn');
         document.addEventListener('mousemove', (e) => {
-            if (document.getElementById('step-2').style.display !== 'block') return;
-            
-            const btnRect = noBtn.getBoundingClientRect();
-            const dist = Math.hypot(e.clientX - (btnRect.left + btnRect.width/2), e.clientY - (btnRect.top + btnRect.height/2));
-
-            if (dist < 150) {
-                const x = (Math.random() - 0.5) * (window.innerWidth - 200);
-                const y = (Math.random() - 0.5) * (window.innerHeight - 200);
-                gsap.to(noBtn, { x, y, duration: 0.3, ease: "power2.out" });
+            const rect = noBtn.getBoundingClientRect();
+            const dist = Math.hypot(e.clientX - (rect.left + rect.width/2), e.clientY - (rect.top + rect.height/2));
+            if (dist < 120) {
+                gsap.to(noBtn, {
+                    x: Math.random() * 400 - 200,
+                    y: Math.random() * 400 - 200,
+                    duration: 0.3
+                });
             }
         });
 
-        function showSuccess() {
-            gsap.to(heart.scale, { x: 3, y: 3, z: 3, duration: 1.5 });
-            gsap.to(heart.material, { emissiveIntensity: 2, duration: 1 });
-            
-            gsap.to("#step-2", { opacity: 0, onComplete: () => {
-                document.getElementById('step-2').style.display = 'none';
-                document.getElementById('step-success').style.display = 'block';
-                gsap.from("#step-success", { opacity: 0, scale: 0.8, duration: 1 });
-            }});
+        function finish() {
+            gsap.to(heart.scale, { x: 5, y: 5, z: 5, duration: 2, ease: "expo.inOut" });
+            gsap.to("#success-overlay", { display: 'flex', opacity: 1, duration: 1.5, delay: 0.5 });
         }
 
+        init3D();
+        createDecorations();
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
-
-        init3D();
-        createSprinkles();
     </script>
 </body>
 </html>
