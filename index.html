@@ -6,7 +6,6 @@
 <title>Break the Spell</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
 <style>
 * {
@@ -31,7 +30,7 @@ html, body {
     background: url("bg.jpg") center/cover no-repeat;
 }
 
-/* OVERLAY */
+/* DARK OVERLAY */
 .overlay {
     position: fixed;
     inset: 0;
@@ -59,7 +58,7 @@ html, body {
     outline: none;
 }
 
-/* MAIN */
+/* MAIN CONTENT */
 #main {
     position: relative;
     z-index: 5;
@@ -83,29 +82,37 @@ p {
     margin-bottom: 40px;
 }
 
+/* BUTTON AREA */
 .actions {
-    display: flex;
-    gap: 30px;
+    position: relative;
+    width: 420px;
+    height: 120px;
 }
 
+/* BUTTONS */
 button {
     padding: 18px 45px;
     border-radius: 50px;
     font-weight: 700;
     cursor: pointer;
     border: none;
+    position: absolute;
 }
 
 .yes {
+    left: 0;
+    top: 30px;
     background: white;
     color: black;
 }
 
 .no {
+    left: 220px;
+    top: 30px;
     background: rgba(255,255,255,0.1);
     color: white;
     border: 1px solid rgba(255,255,255,0.3);
-    position: relative; /* IMPORTANT */
+    transition: left 0.15s ease, top 0.15s ease;
 }
 
 /* SUCCESS */
@@ -138,11 +145,10 @@ button {
     <div>
         <h1>The Curse.</h1>
         <p>
-            <span id="name"></span>,
-            will you be my valentine?
+            <span id="name"></span>, will you be my valentine?
         </p>
 
-        <div class="actions">
+        <div class="actions" id="actionBox">
             <button class="yes" onclick="celebrate()">Break the spell</button>
             <button class="no" id="decline">Decline</button>
         </div>
@@ -159,7 +165,6 @@ button {
 
 <script>
 let active = false;
-const noBtn = document.getElementById("decline");
 
 function start() {
     const name = document.getElementById("nameInput").value.trim();
@@ -170,37 +175,41 @@ function start() {
 
     const main = document.getElementById("main");
     main.style.visibility = "visible";
-    gsap.to(main, { opacity: 1, duration: 1.5 });
+    main.style.opacity = 1;
 
-    setTimeout(() => active = true, 1000);
+    setTimeout(() => active = true, 800);
 }
 
-/* STABLE EVADE LOGIC */
-let lastMove = 0;
+/* SCREEN-LOCKED EVADE LOGIC */
+const btn = document.getElementById("decline");
+const box = document.getElementById("actionBox");
 
-document.addEventListener("mousemove", (e) => {
+box.addEventListener("mousemove", (e) => {
     if (!active) return;
 
-    const now = Date.now();
-    if (now - lastMove < 120) return;
-    lastMove = now;
+    const btnRect = btn.getBoundingClientRect();
+    const boxRect = box.getBoundingClientRect();
 
-    const rect = noBtn.getBoundingClientRect();
-    const bx = rect.left + rect.width / 2;
-    const by = rect.top + rect.height / 2;
+    const btnX = btnRect.left + btnRect.width / 2;
+    const btnY = btnRect.top + btnRect.height / 2;
 
-    const dx = e.clientX - bx;
-    const dy = e.clientY - by;
+    const dx = e.clientX - btnX;
+    const dy = e.clientY - btnY;
+    const distance = Math.hypot(dx, dy);
 
-    const dist = Math.hypot(dx, dy);
+    if (distance < 120) {
+        let newLeft = btn.offsetLeft - dx * 0.4;
+        let newTop  = btn.offsetTop  - dy * 0.4;
 
-    if (dist < 180) {
-        gsap.to(noBtn, {
-            x: gsap.utils.clamp(-120, 120, -dx * 0.4),
-            y: gsap.utils.clamp(-80, 80, -dy * 0.4),
-            duration: 0.25,
-            ease: "power2.out"
-        });
+        /* CLAMP inside container */
+        const maxX = box.clientWidth - btn.clientWidth;
+        const maxY = box.clientHeight - btn.clientHeight;
+
+        newLeft = Math.max(0, Math.min(maxX, newLeft));
+        newTop  = Math.max(0, Math.min(maxY, newTop));
+
+        btn.style.left = newLeft + "px";
+        btn.style.top  = newTop  + "px";
     }
 });
 
