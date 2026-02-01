@@ -1,132 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Break the Spell</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Break the Spell</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
 
-<style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-html, body {
-    width: 100%;
-    height: 100%;
-    background: black;
-    color: white;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    overflow: hidden;
-}
+        html, body {
+            width: 100%;
+            height: 100%;
+            background: black;
+            color: white;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow: hidden;
+        }
 
-/* BACKGROUND */
-.background {
-    position: fixed;
-    inset: 0;
-    background: url("bg.jpg") center/cover no-repeat;
-}
+        /* BACKGROUND */
+        .background {
+            position: fixed;
+            inset: 0;
+            background: url("bg.jpg") center/cover no-repeat;
+            z-index: -2;
+        }
 
-/* DARK OVERLAY */
-.overlay {
-    position: fixed;
-    inset: 0;
-    background: linear-gradient(to right, rgba(0,0,0,0.85), rgba(0,0,0,0.2));
-}
+        /* DARK OVERLAY */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(to right, rgba(0,0,0,0.85), rgba(0,0,0,0.4));
+            z-index: -1;
+        }
 
-/* ONBOARDING */
-#onboarding {
-    position: fixed;
-    inset: 0;
-    background: #050505;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10;
-}
+        /* ONBOARDING */
+        #onboarding {
+            position: fixed;
+            inset: 0;
+            background: #050505;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
 
-#onboarding input {
-    font-size: 3rem;
-    background: none;
-    border: none;
-    border-bottom: 2px solid #555;
-    color: white;
-    text-align: center;
-    outline: none;
-}
+        #onboarding input {
+            font-size: 2.5rem;
+            background: none;
+            border: none;
+            border-bottom: 2px solid #555;
+            color: white;
+            text-align: center;
+            outline: none;
+            font-family: 'Cormorant Garamond', serif;
+        }
 
-/* MAIN CONTENT */
-#main {
-    position: relative;
-    z-index: 5;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    padding-left: 10%;
-    opacity: 0;
-    visibility: hidden;
-}
+        /* MAIN CONTENT */
+        #main {
+            position: relative;
+            z-index: 5;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding-left: 10%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1s ease;
+        }
 
-h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 4rem;
-    margin-bottom: 20px;
-}
+        .content-wrapper {
+            max-width: 700px;
+        }
 
-p {
-    font-size: 1.3rem;
-    max-width: 600px;
-    margin-bottom: 40px;
-}
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 4rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
 
-/* BUTTON AREA */
-.actions {
-    position: relative;
-    width: 420px;
-    height: 120px;
-}
+        .hindi-text {
+            font-size: 1.4rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #ccc;
+        }
 
-/* BUTTONS */
-button {
-    padding: 18px 45px;
-    border-radius: 50px;
-    font-weight: 700;
-    cursor: pointer;
-    border: none;
-    position: absolute;
-}
+        .proposal-text {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+        }
 
-.yes {
-    left: 0;
-    top: 30px;
-    background: white;
-    color: black;
-}
+        /* BUTTONS */
+        button {
+            padding: 18px 45px;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1rem;
+            transition: transform 0.2s ease;
+        }
 
-.no {
-    left: 220px;
-    top: 30px;
-    background: rgba(255,255,255,0.1);
-    color: white;
-    border: 1px solid rgba(255,255,255,0.3);
-    transition: left 0.15s ease, top 0.15s ease;
-}
+        .yes {
+            background: white;
+            color: black;
+            z-index: 10;
+        }
 
-/* SUCCESS */
-#success {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.95);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    z-index: 20;
-}
-</style>
+        .yes:hover {
+            transform: scale(1.1);
+        }
+
+        .no {
+            position: fixed; /* Changed to fixed to move anywhere on screen */
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        /* SUCCESS SCREEN */
+        #success {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 200;
+        }
+    </style>
 </head>
 
 <body>
@@ -136,19 +151,22 @@ button {
 
 <!-- ONBOARDING -->
 <div id="onboarding">
-    <input id="nameInput" placeholder="Type name"
-        onkeydown="if(event.key==='Enter') start()">
+    <input id="nameInput" placeholder="Enter your name" onkeydown="if(event.key==='Enter') start()">
 </div>
 
 <!-- MAIN -->
 <div id="main">
-    <div>
+    <div class="content-wrapper">
         <h1>The Curse.</h1>
-        <p>
-            <span id="name"></span>, will you be my valentine?
+        <p class="hindi-text">
+            Deviji hamne saari valentines akele (apne haath ke saath) kaati hai, 
+            iss 20 saal ki shraap ko todne mai apna yogdaan dijiye.
+        </p>
+        <p class="proposal-text">
+            <span id="display-name"></span>, will you be my valentine?
         </p>
 
-        <div class="actions" id="actionBox">
+        <div class="actions">
             <button class="yes" onclick="celebrate()">Break the spell</button>
             <button class="no" id="decline">Decline</button>
         </div>
@@ -157,61 +175,69 @@ button {
 
 <!-- SUCCESS -->
 <div id="success">
-    <div>
-        <h1>Keep your ass ready.</h1>
-        <p>14th February. No escape.</p>
-    </div>
+    <h1 style="font-family:'Cormorant Garamond',serif;font-size:4.5rem;">
+        Keep your ass ready.
+    </h1>
+    <p style="margin-top:20px;letter-spacing:4px;opacity:0.6;text-transform:uppercase;">
+        14th February. No escape.
+    </p>
 </div>
 
 <script>
 let active = false;
+const btn = document.getElementById("decline");
 
 function start() {
     const name = document.getElementById("nameInput").value.trim();
     if (!name) return;
 
-    document.getElementById("name").innerText = name;
+    document.getElementById("display-name").innerText = name;
     document.getElementById("onboarding").style.display = "none";
 
     const main = document.getElementById("main");
     main.style.visibility = "visible";
     main.style.opacity = 1;
 
+    // Set initial position for the No button
+    const yesBtn = document.querySelector('.yes');
+    const yesRect = yesBtn.getBoundingClientRect();
+    btn.style.left = (yesRect.right + 50) + "px";
+    btn.style.top = yesRect.top + "px";
+
     setTimeout(() => active = true, 800);
 }
 
-/* SCREEN-LOCKED EVADE LOGIC */
-const btn = document.getElementById("decline");
-const box = document.getElementById("actionBox");
-
-box.addEventListener("mousemove", (e) => {
+/* IMPROVED RUNAWAY LOGIC */
+document.addEventListener("mousemove", (e) => {
     if (!active) return;
 
     const btnRect = btn.getBoundingClientRect();
-    const boxRect = box.getBoundingClientRect();
+    
+    // Calculate center of the button
+    const btnCenterX = btnRect.left + btnRect.width / 2;
+    const btnCenterY = btnRect.top + btnRect.height / 2;
 
-    const btnX = btnRect.left + btnRect.width / 2;
-    const btnY = btnRect.top + btnRect.height / 2;
+    // Distance between cursor and button center
+    const distance = Math.hypot(e.clientX - btnCenterX, e.clientY - btnCenterY);
 
-    const dx = e.clientX - btnX;
-    const dy = e.clientY - btnY;
-    const distance = Math.hypot(dx, dy);
-
-    if (distance < 120) {
-        let newLeft = btn.offsetLeft - dx * 0.4;
-        let newTop  = btn.offsetTop  - dy * 0.4;
-
-        /* CLAMP inside container */
-        const maxX = box.clientWidth - btn.clientWidth;
-        const maxY = box.clientHeight - btn.clientHeight;
-
-        newLeft = Math.max(0, Math.min(maxX, newLeft));
-        newTop  = Math.max(0, Math.min(maxY, newTop));
-
-        btn.style.left = newLeft + "px";
-        btn.style.top  = newTop  + "px";
+    // If mouse is within 150px, jump to a random spot
+    if (distance < 150) {
+        moveButton();
     }
 });
+
+function moveButton() {
+    const padding = 50; // Keep button away from screen edges
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+
+    // Calculate random coordinates
+    let newX = Math.random() * (screenWidth - btn.offsetWidth - padding * 2) + padding;
+    let newY = Math.random() * (screenHeight - btn.offsetHeight - padding * 2) + padding;
+
+    btn.style.left = newX + "px";
+    btn.style.top = newY + "px";
+}
 
 function celebrate() {
     document.getElementById("success").style.display = "flex";
