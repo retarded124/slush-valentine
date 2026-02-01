@@ -1,147 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Break the Spell</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Break the Spell</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        html, body {
-            width: 100%;
-            height: 100%;
-            background: black;
-            color: white;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            overflow: hidden;
-        }
+html, body {
+    width: 100%;
+    height: 100%;
+    background: black;
+    color: white;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    overflow: hidden;
+}
 
-        /* BACKGROUND */
-        .background {
-            position: fixed;
-            inset: 0;
-            background: url("bg.jpg") center/cover no-repeat;
-            z-index: -2;
-        }
+/* BACKGROUND - Keep bg.jpg logic */
+.background {
+    position: fixed;
+    inset: 0;
+    background: url("bg.jpg") center/cover no-repeat;
+    z-index: -2;
+}
 
-        /* DARK OVERLAY */
-        .overlay {
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(to right, rgba(0,0,0,0.85), rgba(0,0,0,0.4));
-            z-index: -1;
-        }
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(to right, rgba(0,0,0,0.85), rgba(0,0,0,0.4));
+    z-index: -1;
+}
 
-        /* ONBOARDING */
-        #onboarding {
-            position: fixed;
-            inset: 0;
-            background: #050505;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-        }
+/* ONBOARDING - Added smooth transition support */
+#onboarding {
+    position: fixed;
+    inset: 0;
+    background: #050505;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    transition: opacity 1s ease, visibility 1s ease;
+}
 
-        #onboarding input {
-            font-size: 2.5rem;
-            background: none;
-            border: none;
-            border-bottom: 2px solid #555;
-            color: white;
-            text-align: center;
-            outline: none;
-            font-family: 'Cormorant Garamond', serif;
-        }
+#onboarding h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
 
-        /* MAIN CONTENT */
-        #main {
-            position: relative;
-            z-index: 5;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            padding-left: 10%;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 1s ease;
-        }
+#onboarding input {
+    font-size: 2.5rem;
+    background: none;
+    border: none;
+    border-bottom: 2px solid #555;
+    color: white;
+    text-align: center;
+    outline: none;
+    font-family: 'Cormorant Garamond', serif;
+}
 
-        .content-wrapper {
-            max-width: 700px;
-        }
+/* MAIN CONTENT - Added fade-in state */
+#main {
+    position: relative;
+    z-index: 5;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 10%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1.5s ease;
+}
 
-        h1 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 4rem;
-            margin-bottom: 10px;
-            color: #fff;
-        }
+h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem;
+    margin-bottom: 20px;
+}
 
-        .hindi-text {
-            font-size: 1.4rem;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            color: #ccc;
-        }
+.description {
+    font-size: 1.3rem;
+    max-width: 600px;
+    margin-bottom: 40px;
+    line-height: 1.6;
+}
 
-        .proposal-text {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 40px;
-        }
+/* ACTIONS */
+.actions {
+    position: relative;
+    height: 100px;
+}
 
-        /* BUTTONS */
-        button {
-            padding: 18px 45px;
-            border-radius: 50px;
-            font-weight: 700;
-            cursor: pointer;
-            border: none;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 1rem;
-            transition: transform 0.2s ease;
-        }
+button {
+    padding: 18px 45px;
+    border-radius: 50px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
 
-        .yes {
-            background: white;
-            color: black;
-            z-index: 10;
-        }
+.yes {
+    background: white;
+    color: black;
+}
 
-        .yes:hover {
-            transform: scale(1.1);
-        }
+/* DECLINE BUTTON - Playful movement styles */
+.no {
+    position: fixed; /* Fixed to allow free movement on screen */
+    background: rgba(255,255,255,0.1);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+    /* Transition makes the movement 'slow and continuous' rather than teleporting */
+    transition: left 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                top 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 10;
+}
 
-        .no {
-            position: fixed; /* Changed to fixed to move anywhere on screen */
-            background: rgba(255,255,255,0.1);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.3);
-            white-space: nowrap;
-            z-index: 10;
-        }
-
-        /* SUCCESS SCREEN */
-        #success {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.95);
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            z-index: 200;
-        }
-    </style>
+/* SUCCESS */
+#success {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.95);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 200;
+}
+</style>
 </head>
 
 <body>
@@ -151,19 +148,19 @@
 
 <!-- ONBOARDING -->
 <div id="onboarding">
-    <input id="nameInput" placeholder="Enter your name" onkeydown="if(event.key==='Enter') start()">
+    <h2>Authenticate — what is your name?</h2>
+    <input id="nameInput" placeholder="Type name" autocomplete="off"
+        onkeydown="if(event.key==='Enter') start()">
 </div>
 
 <!-- MAIN -->
 <div id="main">
-    <div class="content-wrapper">
+    <div>
         <h1>The Curse.</h1>
-        <p class="hindi-text">
-            Deviji hamne saari valentines akele (apne haath ke saath) kaati hai, 
-            iss 20 saal ki shraap ko todne mai apna yogdaan dijiye.
-        </p>
-        <p class="proposal-text">
-            <span id="display-name"></span>, will you be my valentine?
+        <p class="description">
+            Deviji hamne saari valentines akele (apne haath ke saath) kaati hai,<br>
+            iss 20 saal ki shraap ko todne mai apna yogdaan dijiye.<br><br>
+            <strong><span id="userName"></span></strong>, will you be my valentine?
         </p>
 
         <div class="actions">
@@ -175,69 +172,85 @@
 
 <!-- SUCCESS -->
 <div id="success">
-    <h1 style="font-family:'Cormorant Garamond',serif;font-size:4.5rem;">
-        Keep your ass ready.
-    </h1>
-    <p style="margin-top:20px;letter-spacing:4px;opacity:0.6;text-transform:uppercase;">
-        14th February. No escape.
-    </p>
+    <div>
+        <h1 style="font-family:'Cormorant Garamond',serif;font-size:4.5rem;">
+            Keep your ass ready.
+        </h1>
+        <p style="margin-top:20px;letter-spacing:4px;opacity:0.6;text-transform:uppercase;">
+            14th February. No escape.
+        </p>
+    </div>
 </div>
 
 <script>
 let active = false;
 const btn = document.getElementById("decline");
+const onboarding = document.getElementById("onboarding");
+const main = document.getElementById("main");
 
 function start() {
     const name = document.getElementById("nameInput").value.trim();
     if (!name) return;
 
-    document.getElementById("display-name").innerText = name;
-    document.getElementById("onboarding").style.display = "none";
+    document.getElementById("userName").innerText = name;
+    
+    // 1. Fade out onboarding
+    onboarding.style.opacity = "0";
+    onboarding.style.visibility = "hidden";
 
-    const main = document.getElementById("main");
-    main.style.visibility = "visible";
-    main.style.opacity = 1;
-
-    // Set initial position for the No button
-    const yesBtn = document.querySelector('.yes');
-    const yesRect = yesBtn.getBoundingClientRect();
-    btn.style.left = (yesRect.right + 50) + "px";
-    btn.style.top = yesRect.top + "px";
-
-    setTimeout(() => active = true, 800);
+    // 2. Fade in main content smoothly
+    setTimeout(() => {
+        onboarding.style.display = "none";
+        main.style.visibility = "visible";
+        main.style.opacity = "1";
+        
+        // Initial button placement
+        const yesBtn = document.querySelector('.yes').getBoundingClientRect();
+        btn.style.left = (yesBtn.right + 40) + "px";
+        btn.style.top = yesBtn.top + "px";
+        
+        setTimeout(() => active = true, 500);
+    }, 1000);
 }
 
-/* IMPROVED RUNAWAY LOGIC */
+/* CONTINUOUS EVASIVE LOGIC */
 document.addEventListener("mousemove", (e) => {
     if (!active) return;
 
-    const btnRect = btn.getBoundingClientRect();
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
     
-    // Calculate center of the button
-    const btnCenterX = btnRect.left + btnRect.width / 2;
-    const btnCenterY = btnRect.top + btnRect.height / 2;
+    const btnRect = btn.getBoundingClientRect();
+    const btnX = btnRect.left + btnRect.width / 2;
+    const btnY = btnRect.top + btnRect.height / 2;
 
-    // Distance between cursor and button center
-    const distance = Math.hypot(e.clientX - btnCenterX, e.clientY - btnCenterY);
+    const dx = btnX - mouseX;
+    const dy = btnY - mouseY;
+    const distance = Math.hypot(dx, dy);
 
-    // If mouse is within 150px, jump to a random spot
-    if (distance < 150) {
-        moveButton();
+    // If mouse gets close (within 180px)
+    if (distance < 180) {
+        const angle = Math.atan2(dy, dx);
+        // Move 100px away from the current position
+        const moveDist = 120; 
+        
+        let newX = btnRect.left + Math.cos(angle) * moveDist;
+        let newY = btnRect.top + Math.sin(angle) * moveDist;
+
+        // BOUNDARY CHECK: Ensure button stays within screen margins (50px)
+        const margin = 50;
+        const screenW = window.innerWidth;
+        const screenH = window.innerHeight;
+
+        if (newX < margin) newX = margin;
+        if (newX > screenW - btnRect.width - margin) newX = screenW - btnRect.width - margin;
+        if (newY < margin) newY = margin;
+        if (newY > screenH - btnRect.height - margin) newY = screenH - btnRect.height - margin;
+
+        btn.style.left = newX + "px";
+        btn.style.top = newY + "px";
     }
 });
-
-function moveButton() {
-    const padding = 50; // Keep button away from screen edges
-    const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
-
-    // Calculate random coordinates
-    let newX = Math.random() * (screenWidth - btn.offsetWidth - padding * 2) + padding;
-    let newY = Math.random() * (screenHeight - btn.offsetHeight - padding * 2) + padding;
-
-    btn.style.left = newX + "px";
-    btn.style.top = newY + "px";
-}
 
 function celebrate() {
     document.getElementById("success").style.display = "flex";
