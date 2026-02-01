@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connection Established | Slush Valentine</title>
+    <title>The Cure | Valentine</title>
     
-    <!-- Typography: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;800&display=swap" rel="stylesheet">
@@ -15,128 +14,136 @@
 
     <style>
         :root {
-            --bg-color: #050505;
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --accent-color: #ffffff;
+            /* Light Purple Aesthetic */
+            --bg-color: #f0e6ff; 
+            --glass-bg: rgba(255, 255, 255, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --text-dark: #2d1b4d;
+            --accent-red: #ff3366;
         }
 
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            margin: 0; padding: 0; box-sizing: border-box;
             font-family: 'Plus Jakarta Sans', sans-serif;
-            -webkit-font-smoothing: antialiased;
         }
 
         body, html {
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             background-color: var(--bg-color);
-            color: white;
+            color: var(--text-dark);
             overflow: hidden;
         }
 
-        /* Subtle Grain Texture */
+        /* Grain Texture (Slush Signature) */
         .grain {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
             background-image: url("https://grainy-gradients.vercel.app/noise.svg");
-            opacity: 0.4;
+            opacity: 0.15;
             pointer-events: none;
             z-index: 10;
         }
 
-        /* 3D Canvas */
-        #canvas-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
+        /* Floating Sprinkles Background */
+        .sprinkle {
+            position: absolute;
+            font-size: 24px;
+            pointer-events: none;
+            z-index: 5;
+            filter: grayscale(0.2) opacity(0.6);
         }
 
-        /* UI Layer */
+        #canvas-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 2;
+        }
+
         .ui-layer {
             position: relative;
             z-index: 20;
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 40px;
         }
 
-        /* Glassmorphism Card */
         .glass-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            border-radius: 24px;
+            border-radius: 32px;
             padding: 40px;
             width: 100%;
-            max-width: 450px;
+            max-width: 500px;
             text-align: center;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
         }
 
         h1 {
             font-weight: 800;
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             letter-spacing: -1px;
-            margin-bottom: 24px;
-            line-height: 1.1;
+            margin-bottom: 20px;
+            line-height: 1.2;
         }
 
-        .input-group {
-            margin-bottom: 20px;
+        .story-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            font-weight: 500;
+            opacity: 0.9;
         }
 
         input {
             width: 100%;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.8);
             border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            padding: 16px;
-            color: white;
+            border-radius: 16px;
+            padding: 18px;
+            color: var(--text-dark);
             font-size: 1rem;
             outline: none;
-            transition: border 0.3s ease;
-        }
-
-        input:focus {
-            border-color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 20px;
         }
 
         button {
             cursor: pointer;
             padding: 16px 32px;
-            border-radius: 12px;
+            border-radius: 14px;
             border: none;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: transform 0.2s ease, opacity 0.2s ease;
+            font-weight: 700;
+            transition: all 0.3s ease;
         }
 
         .btn-primary {
-            background: white;
-            color: black;
+            background: var(--text-dark);
+            color: white;
             width: 100%;
         }
 
-        .btn-primary:hover {
-            transform: scale(1.02);
+        .btn-yes {
+            background: var(--accent-red);
+            color: white;
+            font-size: 1.2rem;
+            padding: 18px 45px;
+            box-shadow: 0 10px 20px rgba(255, 51, 102, 0.3);
         }
 
-        /* Question State */
+        .btn-no {
+            background: white;
+            color: var(--text-dark);
+            border: 1px solid var(--glass-border);
+        }
+
         #step-2, #step-success {
             display: none;
-            position: absolute;
-            width: 100%;
+            max-width: 800px;
             text-align: center;
         }
 
@@ -144,84 +151,80 @@
             display: flex;
             gap: 20px;
             justify-content: center;
-            margin-top: 30px;
-            position: relative;
+            margin-top: 40px;
         }
 
-        .btn-no {
-            background: transparent;
-            color: white;
-            border: 1px solid var(--glass-border);
-            position: relative;
-            z-index: 100;
-            white-space: nowrap;
-        }
-
-        .btn-yes {
-            background: white;
-            color: black;
-            min-width: 120px;
-        }
-
-        /* Success Message */
-        .status-tag {
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-size: 0.7rem;
-            color: #00ff88;
-            margin-bottom: 10px;
-            display: block;
-            font-weight: 800;
-        }
-
-        .pulse {
-            animation: heartbeat 1.5s ease-in-out infinite;
-        }
-
-        @keyframes heartbeat {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-            100% { transform: scale(1); opacity: 1; }
+        .heart-glow {
+            color: var(--accent-red);
         }
     </style>
 </head>
 <body>
 
     <div class="grain"></div>
+    <div id="sprinkle-container"></div>
     <div id="canvas-container"></div>
 
     <div class="ui-layer">
-        <!-- STEP 1: Identification -->
+        <!-- STEP 1 -->
         <div id="step-1" class="glass-card">
-            <span style="font-size: 0.8rem; opacity: 0.5; letter-spacing: 2px; display: block; margin-bottom: 10px;">AUTH_REQUIRED</span>
-            <h1>Identify Recipient</h1>
-            <div class="input-group">
-                <input type="text" id="recipient-name" placeholder="Enter Name..." autocomplete="off">
-            </div>
-            <button class="btn-primary" onclick="proceedToQuestion()">Initialize</button>
+            <h1>Identity Check</h1>
+            <input type="text" id="recipient-name" placeholder="Who are you?">
+            <button class="btn-primary" onclick="proceedToQuestion()">Verify Identity</button>
         </div>
 
-        <!-- STEP 2: The Question -->
+        <!-- STEP 2 -->
         <div id="step-2">
-            <h1 id="question-text" style="font-size: 4rem; max-width: 800px;"></h1>
-            <div class="button-row">
-                <button class="btn-yes" onclick="showSuccess()">Yes</button>
-                <button class="btn-no" id="no-button">No</button>
+            <div class="glass-card" style="max-width: 700px;">
+                <p id="question-text" class="story-text"></p>
+                <div class="button-row">
+                    <button class="btn-yes" onclick="showSuccess()">Yes</button>
+                    <button class="btn-no" id="no-button">No</button>
+                </div>
             </div>
         </div>
 
-        <!-- STEP 3: Success -->
+        <!-- STEP 3 -->
         <div id="step-success">
             <div class="glass-card">
-                <span class="status-tag pulse">● Connection Established</span>
-                <h1 style="margin-bottom: 10px;">Perfect.</h1>
-                <p style="opacity: 0.6;">I'll see you on the 14th.</p>
+                <h1 style="color: var(--accent-red);">Spell Broken. ❤️</h1>
+                <p class="story-text">The curse has been lifted. <br>I'll see you on Valentine's Day.</p>
             </div>
         </div>
     </div>
 
     <script>
-        /** 3D ENGINE (THREE.JS) **/
+        /** BACKGROUND SPRINKLES **/
+        const icons = ['🕊️', '🌹', '💌', '✨', '🩹', '🎀', '🥂', '☁️'];
+        // Adding the cheekier requests
+        const specialIcons = ['🫧', '🦢']; 
+
+        function createSprinkles() {
+            const container = document.getElementById('sprinkle-container');
+            const allIcons = [...icons, ...specialIcons];
+            
+            for (let i = 0; i < 25; i++) {
+                const span = document.createElement('span');
+                span.className = 'sprinkle';
+                span.innerText = allIcons[Math.floor(Math.random() * allIcons.length)];
+                span.style.left = Math.random() * 100 + 'vw';
+                span.style.top = Math.random() * 100 + 'vh';
+                container.appendChild(span);
+
+                // Floating animation
+                gsap.to(span, {
+                    y: "random(-100, 100)",
+                    x: "random(-50, 50)",
+                    rotation: "random(-45, 45)",
+                    duration: "random(10, 20)",
+                    repeat: -1,
+                    yoyo: true,
+                    ease: "sine.inOut"
+                });
+            }
+        }
+
+        /** 3D HEART (RED) **/
         let scene, camera, renderer, heart;
         
         function init3D() {
@@ -231,10 +234,8 @@
 
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-            // Create Heart Shape
             const x = 0, y = 0;
             const heartShape = new THREE.Shape();
             heartShape.moveTo( x + 0.5, y + 0.5 );
@@ -249,44 +250,76 @@
             const geometry = new THREE.ExtrudeGeometry(heartShape, extrudeSettings);
             geometry.center();
 
-            // Liquid Chrome Material
-            const material = new THREE.MeshPhysicalMaterial({
-                color: 0xffffff,
-                metalness: 1,
-                roughness: 0.05,
-                reflectivity: 1,
-                clearcoat: 1,
-                transmission: 0.2, // Hint of frosted glass
-                thickness: 0.5
+            // Material: Bright Red Glow
+            const material = new THREE.MeshStandardMaterial({
+                color: 0xff3366,
+                emissive: 0xff0000,
+                emissiveIntensity: 0.4,
+                roughness: 0.2,
+                metalness: 0.3
             });
 
             heart = new THREE.Mesh(geometry, material);
-            heart.rotation.z = Math.PI; // Flip it right side up
+            heart.rotation.z = Math.PI; 
             scene.add(heart);
 
-            // Lights
-            const pointLight1 = new THREE.PointLight(0xffffff, 1);
-            pointLight1.position.set(5, 5, 5);
-            scene.add(pointLight1);
-
-            const pointLight2 = new THREE.PointLight(0xff0055, 0.5);
-            pointLight2.position.set(-5, -5, 5);
-            scene.add(pointLight2);
-
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
-            scene.add(ambientLight);
+            const light = new THREE.PointLight(0xffffff, 1, 100);
+            light.position.set(5, 5, 5);
+            scene.add(light);
+            scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
             animate();
         }
 
         function animate() {
             requestAnimationFrame(animate);
-            if (heart) {
-                heart.rotation.y += 0.01;
-                // Floating animation
-                heart.position.y = Math.sin(Date.now() * 0.002) * 0.2;
-            }
+            heart.rotation.y += 0.005;
+            heart.position.y = Math.sin(Date.now() * 0.001) * 0.1;
             renderer.render(scene, camera);
+        }
+
+        /** FLOW LOGIC **/
+        function proceedToQuestion() {
+            const name = document.getElementById('recipient-name').value;
+            if (!name) return;
+
+            const story = `I’m convinced I was cursed by a wizard 20 years ago to spend Valentine's Day alone. The only known cure is a 'Yes' from someone as amazing as you. <br><br><strong>${name}</strong>, will you break the spell and be my Valentine?`;
+            document.getElementById('question-text').innerHTML = story;
+
+            gsap.to("#step-1", {
+                opacity: 0, scale: 0.9, duration: 0.5, 
+                onComplete: () => {
+                    document.getElementById('step-1').style.display = 'none';
+                    document.getElementById('step-2').style.display = 'block';
+                    gsap.from("#step-2", { opacity: 0, y: 30, duration: 1 });
+                }
+            });
+        }
+
+        /** EVASIVE NO BUTTON **/
+        const noBtn = document.getElementById('no-button');
+        document.addEventListener('mousemove', (e) => {
+            if (document.getElementById('step-2').style.display !== 'block') return;
+            
+            const btnRect = noBtn.getBoundingClientRect();
+            const dist = Math.hypot(e.clientX - (btnRect.left + btnRect.width/2), e.clientY - (btnRect.top + btnRect.height/2));
+
+            if (dist < 150) {
+                const x = (Math.random() - 0.5) * (window.innerWidth - 200);
+                const y = (Math.random() - 0.5) * (window.innerHeight - 200);
+                gsap.to(noBtn, { x, y, duration: 0.3, ease: "power2.out" });
+            }
+        });
+
+        function showSuccess() {
+            gsap.to(heart.scale, { x: 3, y: 3, z: 3, duration: 1.5 });
+            gsap.to(heart.material, { emissiveIntensity: 2, duration: 1 });
+            
+            gsap.to("#step-2", { opacity: 0, onComplete: () => {
+                document.getElementById('step-2').style.display = 'none';
+                document.getElementById('step-success').style.display = 'block';
+                gsap.from("#step-success", { opacity: 0, scale: 0.8, duration: 1 });
+            }});
         }
 
         window.addEventListener('resize', () => {
@@ -295,72 +328,8 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        /** INTERACTIVE FLOW **/
-        function proceedToQuestion() {
-            const name = document.getElementById('recipient-name').value;
-            if (!name) return alert("Identify yourself.");
-
-            document.getElementById('question-text').innerText = `${name}, will you be my Valentine?`;
-
-            gsap.to("#step-1", {
-                duration: 0.8,
-                scale: 0.8,
-                opacity: 0,
-                ease: "power4.inOut",
-                onComplete: () => {
-                    document.getElementById('step-1').style.display = 'none';
-                    document.getElementById('step-2').style.display = 'block';
-                    gsap.from("#step-2", { duration: 1, y: 50, opacity: 0, ease: "expo.out" });
-                }
-            });
-        }
-
-        /** EVASIVE BUTTON LOGIC **/
-        const noBtn = document.getElementById('no-button');
-        
-        document.addEventListener('mousemove', (e) => {
-            if (document.getElementById('step-2').style.display !== 'block') return;
-
-            const mouseX = e.clientX;
-            const mouseY = e.clientY;
-            const btnRect = noBtn.getBoundingClientRect();
-            const btnCenterX = btnRect.left + btnRect.width / 2;
-            const btnCenterY = btnRect.top + btnRect.height / 2;
-
-            const distance = Math.hypot(mouseX - btnCenterX, mouseY - btnCenterY);
-
-            if (distance < 150) {
-                // Generate random position within viewport padding
-                const newX = Math.random() * (window.innerWidth - 200) - (window.innerWidth / 2 - 100);
-                const newY = Math.random() * (window.innerHeight - 200) - (window.innerHeight / 2 - 100);
-
-                gsap.to(noBtn, {
-                    x: newX,
-                    y: newY,
-                    duration: 0.4,
-                    ease: "elastic.out(1, 0.6)"
-                });
-            }
-        });
-
-        function showSuccess() {
-            // Transform Heart to Glow
-            gsap.to(heart.scale, { x: 2, y: 2, z: 2, duration: 2, ease: "expo.out" });
-            gsap.to(heart.material, { emissive: new THREE.Color(0xffffff), emissiveIntensity: 0.5, duration: 1 });
-
-            gsap.to("#step-2", {
-                duration: 0.5,
-                opacity: 0,
-                onComplete: () => {
-                    document.getElementById('step-2').style.display = 'none';
-                    document.getElementById('step-success').style.display = 'block';
-                    gsap.from("#step-success", { duration: 1, scale: 0.9, opacity: 0, ease: "expo.out" });
-                }
-            });
-        }
-
-        // Initialize
         init3D();
+        createSprinkles();
     </script>
 </body>
 </html>
