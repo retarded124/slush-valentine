@@ -256,32 +256,32 @@
         }
 
         /** EVASIVE BUTTON PHYSICS **/
-        const noBtn = document.getElementById('evasive-no');
-        
-        document.addEventListener('mousemove', (e) => {
-            const rect = noBtn.getBoundingClientRect();
-            const mouseX = e.clientX;
-            const mouseY = e.clientY;
-            
-            const btnCenterX = rect.left + rect.width / 2;
-            const btnCenterY = rect.top + rect.height / 2;
+const noBtn = document.getElementById('evasive-no');
 
-            const distance = Math.hypot(mouseX - btnCenterX, mouseY - btnCenterY);
+document.addEventListener('mousemove', (e) => {
+    const rect = noBtn.getBoundingClientRect();
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
 
-            if (distance < 150) {
-                // Kick button to random spot nearby
-                const angle = Math.atan2(mouseY - btnCenterY, mouseX - btnCenterX);
-                const newX = (Math.random() - 0.5) * (window.innerWidth * 0.6);
-                const newY = (Math.random() - 0.5) * (window.innerHeight * 0.6);
+    const btnCenterX = rect.left + rect.width / 2;
+    const btnCenterY = rect.top + rect.height / 2;
 
-                gsap.to(noBtn, {
-                    x: newX,
-                    y: newY,
-                    duration: 0.4,
-                    ease: "power4.out"
-                });
-            }
+    const distance = Math.hypot(mouseX - btnCenterX, mouseY - btnCenterY);
+
+    if (distance < 300) {
+        gsap.killTweensOf(noBtn);
+
+        const dx = btnCenterX - mouseX;
+        const dy = btnCenterY - mouseY;
+
+        gsap.to(noBtn, {
+            x: `+=${dx * 1.5}`,
+            y: `+=${dy * 1.5}`,
+            duration: 0.12,
+            ease: "power2.out"
         });
+    }
+});
 
         function celebrate() {
             document.getElementById('success-screen').style.display = 'flex';
